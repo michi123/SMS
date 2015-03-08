@@ -25,6 +25,7 @@ import android.widget.Toast;
 import android.net.NetworkInfo;
 import Client.Client;
 import Contact.GetContactsDemo;
+import android.telephony.TelephonyManager;
 
 
 public class MainActivity extends Activity {
@@ -72,7 +73,8 @@ public class MainActivity extends Activity {
         }
         setMainActivity();
         me = new Messenger(this);
-      //  System.out.println("Moje cislo: "+getMy10DigitPhoneNumber());
+      System.out.println("Moje cislo: "+getMy10DigitPhoneNumber());
+
 
     }
 
@@ -97,6 +99,7 @@ public class MainActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+
     public void checkContact(View v){// funguje (pripojeni k wifi)
         ConnectivityManager cm =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -106,6 +109,17 @@ public class MainActivity extends Activity {
         }
         else {
             System.out.println("Nejsem připojen k internetu");
+        }
+    }
+    public boolean isConnected(){
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnected()) {
+            return true;
+        }
+        else {
+            return false;
         }
     }
 
@@ -119,7 +133,6 @@ public class MainActivity extends Activity {
 
 
     public void sendCommand(String command) {
-        System.out.println("metoda sendCommand");
         c.send(command);
         System.out.println("Odeslano: " + command);
     }
@@ -172,18 +185,18 @@ public class MainActivity extends Activity {
         while (cursor.moveToNext()) {
             String strbody = cursor.getString(cursor.getColumnIndex("body"));
             System.out.println(strbody);
-        }
+        }cursor.close();//tady nekde dat cursor.close()
     }
     private String getMyPhoneNumber(){
         TelephonyManager mTelephonyMgr;
         mTelephonyMgr = (TelephonyManager)
                 getSystemService(Context.TELEPHONY_SERVICE);
-        return mTelephonyMgr.getLine1Number();
+        return mTelephonyMgr.getSimSerialNumber();
     }
 
     private String getMy10DigitPhoneNumber(){
         String s = getMyPhoneNumber();
-        return s.substring(2);
+        return s.substring(0);
     }
 
     public void loadContact(View v) {

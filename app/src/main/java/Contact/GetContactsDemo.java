@@ -6,6 +6,8 @@ package Contact;
     import android.database.Cursor;
     import android.provider.ContactsContract;
 
+    import com.example.michal.smssync.Messenger;
+
     import Client.Client;
     import dojson.ContactCo;
     import dojson.JSONBroker;
@@ -119,22 +121,22 @@ public class GetContactsDemo {
                         }
                         orgCur.close();*/
                         newContact(email,name,phone);
+                        System.out.println("poslani do metody: "+email+" "+name+" "+phone);
                     }
                 }
             }
         }
 
     private void newContact(String email, String name, String phone) {
+        Messenger messenger = new Messenger();
         ContactCo conCo = factory.createContact(
                 email,
                 name,
-                "",
-                "",
+                "prijmeni",
+                "nick",
                 phone);
-
         MsgPack packedContact = factory.createMsgPack(conCo, conCo.hashCode(), MsgPack.ActionType.NEW, MsgPack.ObjectType.CON);
-        String encodedContact = broker.contactToJson(packedContact);//toto poslat !!!!!! na server
-        Client.getInst().send(encodedContact); // muze haprovat!!!!!!!!!!!
+        messenger.send(broker.contactToJson(packedContact));
     }
 
 }

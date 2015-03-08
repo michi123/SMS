@@ -32,6 +32,7 @@ import java.util.List;
         @Override
         public void onChange(boolean selfChange) {
             Log.i(TAG, "Contacs change");
+            System.out.println("kontakt zmena!!!");
             for(ContactsChangeListener l : listeners){
                 l.onContactsChange();
             }

@@ -15,6 +15,13 @@ public class Messenger {
 
     public void send(String command) {
         MainActivity m=MainActivity.getMainActivity();
-        m.sendCommand(command);
+        if(true==m.isConnected()){
+            m.sendCommand(command);
+        }
+        else {
+            System.out.println("prvek ma jit do fronty telefon je offline");
+            //fronta
+        }
+
     }
 }

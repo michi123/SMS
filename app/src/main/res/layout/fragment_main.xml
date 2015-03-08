@@ -56,7 +56,6 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_below="@+id/logout"
         android:layout_above="@+id/chectContact" />
 
     <Button
@@ -69,5 +68,70 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:onClick="checkContact" />
+
+    <com.example.michal.smssync.myNumberPicker
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/numberPicker1"
+        android:layout_below="@+id/logout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="37dp"
+        max="59"
+        min="0"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text=":"
+        android:id="@+id/textView"
+        android:layout_marginTop="51dp"
+        android:layout_alignTop="@+id/numberPicker2"
+        android:layout_toLeftOf="@+id/numberPicker2"
+        android:layout_toStartOf="@+id/numberPicker2" />
+
+    <com.example.michal.smssync.myNumberPicker
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/numberPicker2"
+        android:layout_alignTop="@+id/numberPicker1"
+        android:layout_alignRight="@+id/chectContact"
+        android:layout_alignEnd="@+id/chectContact"
+        max="59"
+        min="0"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text=":"
+        android:id="@+id/textView2"
+        android:layout_alignTop="@+id/textView"
+        android:layout_toRightOf="@+id/chectContact"
+        android:layout_toEndOf="@+id/chectContact" />
+
+    <com.example.michal.smssync.myNumberPicker
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/numberPicker3"
+        android:layout_alignBottom="@+id/numberPicker2"
+        android:layout_toRightOf="@+id/textView2"
+        android:layout_toEndOf="@+id/textView2"
+        max="59"
+        min="0"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Synchronizovat po:"
+        android:id="@+id/textView3"
+        android:layout_above="@+id/textView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
