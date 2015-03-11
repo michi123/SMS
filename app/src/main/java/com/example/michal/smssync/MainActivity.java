@@ -20,6 +20,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.net.NetworkInfo;
@@ -34,6 +36,12 @@ public class MainActivity extends Activity {
     private Client c;
     private boolean isOpen = false;
     private static MainActivity mainActivity = null;
+    NumberPicker np1;
+    NumberPicker np2;
+    NumberPicker np3;
+    int timer;
+    String telephoneNumber;
+    TextView cislo;
 
     private BroadcastReceiver intentReciever = new BroadcastReceiver() {
         @Override
@@ -57,7 +65,10 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         intentFilter = new IntentFilter();
         intentFilter.addAction("SMS_RECEIVED_ACTION");
-
+         np1 = (NumberPicker)findViewById(R.id.numberPicker1);
+         np2 = (NumberPicker)findViewById(R.id.numberPicker2);
+        np3 = (NumberPicker)findViewById(R.id.numberPicker3);
+        cislo = (EditText)findViewById(R.id.telephoneNumber);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
                     .add(R.id.container, new PlaceholderFragment())
@@ -73,44 +84,23 @@ public class MainActivity extends Activity {
         }
         setMainActivity();
         me = new Messenger(this);
-      System.out.println("Moje cislo: "+getMy10DigitPhoneNumber());
+    }
 
+
+
+    public void Time(View v){
+        this.timer= ((np1.getValue()*60*60)+(np2.getValue()*60)+np3.getValue());
+        System.out.println(this.timer);
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+    public void setNumber(View v){
+        this.telephoneNumber=cislo.getText().toString();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+    public void checkContact(View v) {// funguje (pripojeni k wifi)
     }
 
-    public void checkContact(View v){// funguje (pripojeni k wifi)
-        ConnectivityManager cm =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.isConnected()) {
-            System.out.println("Jsem připojen k internetu");
-        }
-        else {
-            System.out.println("Nejsem připojen k internetu");
-        }
-    }
     public boolean isConnected(){
         ConnectivityManager cm =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -122,6 +112,8 @@ public class MainActivity extends Activity {
             return false;
         }
     }
+
+    
 
     public void loginToServer(View v) {// dodelat at si telefoni cislo bere ze simkarty!!!!!!!!!!!!!!!!!
         c.send("loginDevice(+420 739 096 145)");
