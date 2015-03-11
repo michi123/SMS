@@ -42,10 +42,10 @@
         android:layout_height="wrap_content"
         android:text="Logout"
         android:id="@+id/logout"
-        android:layout_below="@+id/button6"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:onClick="logout" />
+        android:onClick="logout"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/textMsg"
+        android:layout_alignEnd="@+id/textMsg" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -68,18 +68,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:onClick="checkContact" />
-
-    <com.example.michal.smssync.myNumberPicker
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/numberPicker1"
-        android:layout_below="@+id/logout"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="37dp"
-        max="59"
-        min="0"
-        />
 
     <TextView
         android:layout_width="wrap_content"
@@ -113,17 +101,6 @@
         android:layout_toRightOf="@+id/chectContact"
         android:layout_toEndOf="@+id/chectContact" />
 
-    <com.example.michal.smssync.myNumberPicker
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/numberPicker3"
-        android:layout_alignBottom="@+id/numberPicker2"
-        android:layout_toRightOf="@+id/textView2"
-        android:layout_toEndOf="@+id/textView2"
-        max="59"
-        min="0"
-        />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -133,5 +110,57 @@
         android:layout_above="@+id/textView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <com.example.michal.smssync.myNumberPicker
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/numberPicker1"
+        max="59"
+        min="0"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <com.example.michal.smssync.myNumberPicker
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/numberPicker3"
+        android:layout_toEndOf="@+id/textView3"
+        max="59"
+        min="0"
+        android:layout_alignTop="@+id/numberPicker2"
+        android:layout_toRightOf="@+id/textView3" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/editText"
+        android:layout_below="@+id/numberPicker2"
+        android:layout_toRightOf="@+id/numberPicker1"
+        android:layout_toEndOf="@+id/numberPicker1"
+        android:layout_alignRight="@+id/numberPicker3"
+        android:layout_alignEnd="@+id/numberPicker3" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Tel. číslo"
+        android:id="@+id/textView4"
+        android:layout_below="@+id/numberPicker2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save number"
+        android:id="@+id/saveNumber"
+        android:layout_below="@+id/numberPicker3"
+        android:layout_toRightOf="@+id/editText"
+        android:layout_toEndOf="@+id/editText"
+        android:layout_alignParentStart="false" />
 
 </RelativeLayout>
