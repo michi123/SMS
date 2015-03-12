@@ -12,12 +12,11 @@ import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -27,7 +26,7 @@ import android.widget.Toast;
 import android.net.NetworkInfo;
 import Client.Client;
 import Contact.GetContactsDemo;
-import android.telephony.TelephonyManager;
+import Contact.MyContactObserver;
 
 
 public class MainActivity extends Activity {
@@ -42,6 +41,9 @@ public class MainActivity extends Activity {
     int timer;
     String telephoneNumber;
     TextView cislo;
+
+    //Testovací proměnné
+    String testNumber = "+420 608 812 429";
 
     private BroadcastReceiver intentReciever = new BroadcastReceiver() {
         @Override
@@ -62,20 +64,30 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        // Registrace kontakt observeru
+        getContentResolver()
+                .registerContentObserver(
+                        ContactsContract.Contacts.CONTENT_URI, true,
+                        new MyContactObserver());
+
         setContentView(R.layout.activity_main);
         intentFilter = new IntentFilter();
         intentFilter.addAction("SMS_RECEIVED_ACTION");
-         np1 = (NumberPicker)findViewById(R.id.numberPicker1);
-         np2 = (NumberPicker)findViewById(R.id.numberPicker2);
+        np1 = (NumberPicker) findViewById(R.id.numberPicker1);
+        np2 = (NumberPicker) findViewById(R.id.numberPicker2);
         np3 = (NumberPicker)findViewById(R.id.numberPicker3);
-        cislo = (EditText)findViewById(R.id.telephoneNumber);
+        cislo = (EditText) findViewById(R.id.cislo);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
+
         c = Client.getInst();
         c.setActivity(this);
+
         while (!isOpen) { //zkusit smazat
             try {
                 Thread.sleep(500);
@@ -95,7 +107,6 @@ public class MainActivity extends Activity {
     }
 
     public void setNumber(View v){
-        this.telephoneNumber=cislo.getText().toString();
     }
 
     public void checkContact(View v) {// funguje (pripojeni k wifi)
@@ -116,8 +127,8 @@ public class MainActivity extends Activity {
     
 
     public void loginToServer(View v) {// dodelat at si telefoni cislo bere ze simkarty!!!!!!!!!!!!!!!!!
-        c.send("loginDevice(+420 739 096 145)");
-        System.out.println("loginDevice(+420 739 096 145)");
+        c.send("loginDevice(" + testNumber + ")");
+        System.out.println("loginDevice(" + testNumber + ")");
     }
     public static MainActivity getMainActivity(){
         return mainActivity;
