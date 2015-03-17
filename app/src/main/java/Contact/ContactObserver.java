@@ -4,12 +4,14 @@ import android.content.Context;
 import android.database.ContentObserver;
 import android.os.Handler;
 
+import com.example.michal.smssync.MainActivity;
+
 /**
  * Created by Jan on 11. 3. 2015.
  */
 
-public class MyContactObserver extends ContentObserver {
-    public MyContactObserver() {
+public class ContactObserver extends ContentObserver {
+    public ContactObserver() {
         super(new Handler());
     }
 
@@ -17,7 +19,7 @@ public class MyContactObserver extends ContentObserver {
     public void onChange(boolean selfChange) {
         super.onChange(selfChange);
 
-        System.out.println("Změna kontaktů v DB !!!");
+        MainActivity.getMainActivity().loadContact();
 
     }
 
