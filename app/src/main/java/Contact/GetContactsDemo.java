@@ -126,7 +126,7 @@ public class GetContactsDemo {
                 }
             }
         }
-
+    /*
     private void newContact(String email, String name, String phone) {
         Messenger messenger = new Messenger();
         ContactCo conCo = factory.createContact(
@@ -138,5 +138,17 @@ public class GetContactsDemo {
         MsgPack packedContact = factory.createMsgPack(conCo, conCo.hashCode(), MsgPack.ActionType.NEW, MsgPack.ObjectType.CON);
         messenger.send(broker.contactToJson(packedContact));
     }
+    */
 
+    private void newContact(String email, String name, String phone) {
+        Messenger messenger = new Messenger();
+        ContactCo conCo = factory.createContact(
+                email,
+                name,
+                name,
+                name,
+                phone);
+        MsgPack packedContact = factory.createMsgPack(conCo, conCo.hashCode(), MsgPack.ActionType.NEW, MsgPack.ObjectType.CON);
+        messenger.send(broker.contactToJson(packedContact));
+    }
 }

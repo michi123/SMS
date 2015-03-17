@@ -25,8 +25,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.net.NetworkInfo;
 import Client.Client;
+import Contact.ContactObserver;
 import Contact.GetContactsDemo;
-import Contact.MyContactObserver;
 
 
 public class MainActivity extends Activity {
@@ -70,7 +70,7 @@ public class MainActivity extends Activity {
         getContentResolver()
                 .registerContentObserver(
                         ContactsContract.Contacts.CONTENT_URI, true,
-                        new MyContactObserver());
+                        new ContactObserver());
 
         setContentView(R.layout.activity_main);
         intentFilter = new IntentFilter();
@@ -203,6 +203,12 @@ public class MainActivity extends Activity {
     }
 
     public void loadContact(View v) {
+        //nacteni vsech kontaktu
+        GetContactsDemo contactsDemo = new GetContactsDemo();
+        contactsDemo.readContacts(getContentResolver());
+    }
+
+    public void loadContact() {
         //nacteni vsech kontaktu
         GetContactsDemo contactsDemo = new GetContactsDemo();
         contactsDemo.readContacts(getContentResolver());
