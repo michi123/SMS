@@ -1,6 +1,14 @@
 package Client;
 
+import android.content.ContentValues;
+import android.net.Uri;
+import android.telephony.SmsManager;
+import android.util.Log;
+import android.widget.Toast;
+
 import com.example.michal.smssync.MainActivity;
+import com.example.michal.smssync.Messenger;
+
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.drafts.Draft_10;
@@ -14,7 +22,7 @@ public class Client extends WebSocketClient {
 
     public static String address = "apsync.ddns.net/SMSCore/anth";
     private static Client inst = null;
-    private static MainActivity ac;
+    private static Messenger ac;
 
     public Client(URI serverUri, Draft draft) {
         super(serverUri, draft);
@@ -33,14 +41,14 @@ public class Client extends WebSocketClient {
         return Client.inst;
     }
 
-    public void setActivity(MainActivity ac) {
+    public void setActivity(Messenger ac) {
         Client.ac = ac;
     }
 
     @Override
     public void onOpen(ServerHandshake serverHandshake) {
-        Client.ac.setOpen(true);
-    } //primo otevrit spojeni v Messengeru
+
+    }
 
     @Override
     public void onMessage(String s) {
@@ -54,11 +62,13 @@ public class Client extends WebSocketClient {
 
     @Override
     public void onClose(int i, String s, boolean b) {
-        Client.ac.setOpen(false);
+
     }
 
     @Override
     public void onError(Exception e) {
         System.out.println("onError: " + e.getMessage());
     }
+
+
 }

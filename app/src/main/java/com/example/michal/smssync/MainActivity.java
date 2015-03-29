@@ -9,12 +9,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
-import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.telephony.SmsManager;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,8 +21,10 @@ import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.net.NetworkInfo;
-import Client.Client;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
 import Contact.ContactObserver;
 import Contact.GetContactsDemo;
 
@@ -32,18 +32,16 @@ import Contact.GetContactsDemo;
 public class MainActivity extends Activity {
     IntentFilter intentFilter;
     Messenger me;
-    private Client c;
-    private boolean isOpen = false;
-    private static MainActivity mainActivity = null;
+   // private Client c;
+    public static MainActivity mainActivity = null;
     NumberPicker np1;
     NumberPicker np2;
     NumberPicker np3;
     int timer;
-    String telephoneNumber;
-    TextView cislo;
+    EditText cislo;
+    int casSynchronizace=10; //nacist z gui
 
-    //Testovací proměnné
-    String testNumber = "+420 608 812 429";
+    public static String testNumber = "+420 773 048 598";
 
     private BroadcastReceiver intentReciever = new BroadcastReceiver() {
         @Override
@@ -53,28 +51,19 @@ public class MainActivity extends Activity {
         }
     };
 
-    public void setOpen(boolean open) {
-        this.isOpen = open;
-    }
 
-    public void setMainActivity() {
-        this.mainActivity = this;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         // Registrace kontakt observeru
-        getContentResolver()
-                .registerContentObserver(
-                        ContactsContract.Contacts.CONTENT_URI, true,
-                        new ContactObserver());
-
+        getContentResolver().registerContentObserver(
+                ContactsContract.Contacts.CONTENT_URI, true, new ContactObserver());
         setContentView(R.layout.activity_main);
+
         intentFilter = new IntentFilter();
         intentFilter.addAction("SMS_RECEIVED_ACTION");
+
         np1 = (NumberPicker) findViewById(R.id.numberPicker1);
         np2 = (NumberPicker) findViewById(R.id.numberPicker2);
         np3 = (NumberPicker)findViewById(R.id.numberPicker3);
@@ -84,100 +73,43 @@ public class MainActivity extends Activity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
-
-        c = Client.getInst();
-        c.setActivity(this);
-
-        while (!isOpen) { //zkusit smazat
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-            }
-        }
         setMainActivity();
-        me = new Messenger(this);
+        synchronizace();
     }
 
-
-
-    public void Time(View v){
-        this.timer= ((np1.getValue()*60*60)+(np2.getValue()*60)+np3.getValue());
-        System.out.println(this.timer);
-
+    public void setMainActivity() {
+        this.mainActivity = this;
     }
 
-    public void setNumber(View v){
-    }
-
-    public void checkContact(View v) {// funguje (pripojeni k wifi)
-    }
-
-    public boolean isConnected(){
-        ConnectivityManager cm =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.isConnected()) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
-    
-
-    public void loginToServer(View v) {// dodelat at si telefoni cislo bere ze simkarty!!!!!!!!!!!!!!!!!
-        c.send("loginDevice(" + testNumber + ")");
-        System.out.println("loginDevice(" + testNumber + ")");
-    }
     public static MainActivity getMainActivity(){
         return mainActivity;
     }
 
-
-    public void sendCommand(String command) {
-        c.send(command);
-        System.out.println("Odeslano: " + command);
+    public void Time(View v){//dodelat
+        this.timer= ((np1.getValue()*60*60)+(np2.getValue()*60)+np3.getValue());
+        System.out.println(this.timer);
     }
 
-    public void logout(View v) {
-        c.send("logoutDevice()");
-        System.out.println("logoutDevice()");
+    public void setNumber(View v){ //doresit hashovani
+        //this.testNumber=cislo.getText().toString();  //nefunkcni
+        System.out.println("Registrace cisla: "+testNumber);
+        new Messenger("registerDevice{\"action\":\"NEW\",\"objectType\":\"DEV\",\"object\":{\"phone\":\""+this.testNumber+"\"},\"hash\":396873410}",true);
     }
 
-    public void sendSMS1(String phoneNumber, String messgeText) {
-        System.out.println("Metoda sendSMS");
-        Log.i("Send SMS", "");
-        String phoneNo = phoneNumber; // object.getPromena4();//"720391667";  //"725657989";
-        String message = messgeText; //object.getPromena2();// "Zkouska aplikace do predmetu ROPR, Michal Kostelecky 29.1.";
-        try {
-            SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(phoneNo, null, message, null, null);
-            System.out.println("SMS odeslana");
-            saveSMStoTelephone1(phoneNo, message);
-            Toast.makeText(getApplicationContext(), "SMS sent.",
-                    Toast.LENGTH_LONG).show();
-        } catch (Exception e) {
-            Toast.makeText(getApplicationContext(),
-                    "SMS faild, please try again.",
-                    Toast.LENGTH_LONG).show();
-            e.printStackTrace();
-        }
+
+
+    public void synchronizace(){ //zkontrolovat jestli se zmeni doba poslani resync kdyz ho zmenim v gui
+        final Timer timer = new Timer();
+        TimerTask resync = new TimerTask() {
+            public void run() {
+                  new Messenger("resync",false);
+            }
+        };
+        timer.scheduleAtFixedRate(resync, 0, casSynchronizace*1000);
 
     }
 
-    public void saveSMStoTelephone1(String cislo, String text) {
-        //Ukladani sms do odeslanych
-        ContentValues values = new ContentValues();
-        values.put("address", cislo);
-        values.put("body", text);
-        getContentResolver().insert(Uri.parse("content://sms/sent"), values);
-
-        System.out.println("sms ulozena");
-
-    }
-
-    public void loadSMS(View v) {
+    public void loadSMS(View v) {               //nejspise nepouzijem
         //nacteni sms od kontaktu z telefonu
         Uri uri = Uri.parse("content://sms/");
         ContentResolver contentResolver = getContentResolver();
@@ -190,17 +122,6 @@ public class MainActivity extends Activity {
             System.out.println(strbody);
         }cursor.close();//tady nekde dat cursor.close()
     }
-    private String getMyPhoneNumber(){
-        TelephonyManager mTelephonyMgr;
-        mTelephonyMgr = (TelephonyManager)
-                getSystemService(Context.TELEPHONY_SERVICE);
-        return mTelephonyMgr.getSimSerialNumber();
-    }
-
-    private String getMy10DigitPhoneNumber(){
-        String s = getMyPhoneNumber();
-        return s.substring(0);
-    }
 
     public void loadContact(View v) {
         //nacteni vsech kontaktu
@@ -212,19 +133,6 @@ public class MainActivity extends Activity {
         //nacteni vsech kontaktu
         GetContactsDemo contactsDemo = new GetContactsDemo();
         contactsDemo.readContacts(getContentResolver());
-    }
-
-    //receiver
-    @Override
-    protected void onResume() {
-        registerReceiver(intentReciever, intentFilter);
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        unregisterReceiver(intentReciever);
-        super.onPause();
     }
 
     /**
