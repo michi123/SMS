@@ -22,7 +22,7 @@ public class Messenger {
 
 
     public void send(String command,boolean registrace) {
-        if (true == isConnected()) {// if(true==m.isConnected()){
+        if (true == isConnected()) {
             if(registrace==false){
                 loginToServer();
             }
@@ -39,8 +39,9 @@ public class Messenger {
             logout();
          } else {
             System.out.println("prvek ma jit do fronty telefon je offline");
-            //pokud je prikaz resync nezapisovat do fronty
-            //fronta
+            if(command!="resymc") {//pokud je prikaz resync nezapisovat do fronty
+                MainActivity.mainActivity.queue.add(command);
+            }
         }
     }
 
@@ -54,7 +55,7 @@ public class Messenger {
         System.out.println("logoutDevice()");
     }
 
-    public boolean isConnected(){//nefunguje protoze neni v MainActivity
+    public static boolean isConnected(){//nefunguje protoze neni v MainActivity
         ConnectivityManager cm =
                 (ConnectivityManager) MainActivity.mainActivity.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();

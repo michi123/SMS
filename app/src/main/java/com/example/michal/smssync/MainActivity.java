@@ -22,6 +22,8 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -32,15 +34,15 @@ import Contact.GetContactsDemo;
 public class MainActivity extends Activity {
     IntentFilter intentFilter;
     Messenger me;
-   // private Client c;
+    // private Client c;
     public static MainActivity mainActivity = null;
     NumberPicker np1;
     NumberPicker np2;
     NumberPicker np3;
     int timer;
     EditText cislo;
-    int casSynchronizace=10; //nacist z gui
-
+    int casSynchronizace = 10; //nacist z gui
+    Queue<String> queue = new PriorityQueue<String>();
     public static String testNumber = "+420 773 048 598";
 
     private BroadcastReceiver intentReciever = new BroadcastReceiver() {
@@ -50,7 +52,6 @@ public class MainActivity extends Activity {
             intTxt.setText(intent.getExtras().getString("sms"));
         }
     };
-
 
 
     @Override
@@ -66,7 +67,7 @@ public class MainActivity extends Activity {
 
         np1 = (NumberPicker) findViewById(R.id.numberPicker1);
         np2 = (NumberPicker) findViewById(R.id.numberPicker2);
-        np3 = (NumberPicker)findViewById(R.id.numberPicker3);
+        np3 = (NumberPicker) findViewById(R.id.numberPicker3);
         cislo = (EditText) findViewById(R.id.cislo);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
@@ -81,31 +82,37 @@ public class MainActivity extends Activity {
         this.mainActivity = this;
     }
 
-    public static MainActivity getMainActivity(){
+    public static MainActivity getMainActivity() {
         return mainActivity;
     }
 
-    public void Time(View v){//dodelat
-        this.timer= ((np1.getValue()*60*60)+(np2.getValue()*60)+np3.getValue());
+    public void Time(View v) {//dodelat
+        this.timer = ((np1.getValue() * 60 * 60) + (np2.getValue() * 60) + np3.getValue());
         System.out.println(this.timer);
     }
 
-    public void setNumber(View v){ //doresit hashovani
+    public void setNumber(View v) { //doresit hashovani
         //this.testNumber=cislo.getText().toString();  //nefunkcni
-        System.out.println("Registrace cisla: "+testNumber);
-        new Messenger("registerDevice{\"action\":\"NEW\",\"objectType\":\"DEV\",\"object\":{\"phone\":\""+this.testNumber+"\"},\"hash\":396873410}",true);
+        System.out.println("Registrace cisla: " + testNumber);
+        new Messenger("registerDevice{\"action\":\"NEW\",\"objectType\":\"DEV\",\"object\":{\"phone\":\"" + this.testNumber + "\"},\"hash\":396873410}", true);
     }
 
 
-
-    public void synchronizace(){ //zkontrolovat jestli se zmeni doba poslani resync kdyz ho zmenim v gui
+    public void synchronizace() { //zkontrolovat jestli se zmeni doba poslani resync kdyz ho zmenim v gui
         final Timer timer = new Timer();
         TimerTask resync = new TimerTask() {
             public void run() {
-                  new Messenger("resync",false);
+                new Messenger("resync", false);
+                if (queue.size() != 0) {
+                    for (int i = 0; i < queue.size(); i++) {
+                        if (Messenger.isConnected() == true) {
+                            new Messenger(queue.poll().toString(), false);// dalo by se udelat tak ze by overoval jestli dosel prikaz na server a pak ho vymazal z kolekce
+                        }
+                    }
+                }
             }
         };
-        timer.scheduleAtFixedRate(resync, 0, casSynchronizace*1000);
+        timer.scheduleAtFixedRate(resync, 0, casSynchronizace * 1000);
 
     }
 
@@ -120,7 +127,8 @@ public class MainActivity extends Activity {
         while (cursor.moveToNext()) {
             String strbody = cursor.getString(cursor.getColumnIndex("body"));
             System.out.println(strbody);
-        }cursor.close();//tady nekde dat cursor.close()
+        }
+        cursor.close();//tady nekde dat cursor.close()
     }
 
     public void loadContact(View v) {
