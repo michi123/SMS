@@ -29,6 +29,7 @@ import java.util.TimerTask;
 
 import Contact.ContactObserver;
 import Contact.GetContactsDemo;
+import library.SMSSyncLibrary;
 
 
 public class MainActivity extends Activity {
@@ -99,6 +100,7 @@ public class MainActivity extends Activity {
 
 
     public void synchronizace() { //zkontrolovat jestli se zmeni doba poslani resync kdyz ho zmenim v gui
+
         final Timer timer = new Timer();
         TimerTask resync = new TimerTask() {
             public void run() {
@@ -159,6 +161,30 @@ public class MainActivity extends Activity {
         }
     }
 
+
+    public void startContactList(View v){
+        Intent i = new Intent(this, ContactActivity.class);
+        startActivityForResult(i, SMSSyncLibrary.CONTACT_LIST_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode){
+            case SMSSyncLibrary.CONTACT_LIST_REQUEST_CODE :
+                if(data != null){
+                    String number = data.getStringExtra("PHONE_NUMBER");
+                    EditText editTextNumber = (EditText) findViewById(R.id.numberFromContactList);
+                    editTextNumber.setText(number);
+                }
+                break;
+
+
+
+            default:
+        }
+    }
 
 }
 
