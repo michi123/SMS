@@ -132,18 +132,6 @@
         android:layout_alignTop="@+id/numberPicker2"
         android:layout_toRightOf="@+id/textView3" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/cislo"
-        android:layout_below="@+id/numberPicker2"
-        android:layout_toRightOf="@+id/numberPicker1"
-        android:layout_toEndOf="@+id/numberPicker1"
-        android:layout_alignRight="@+id/numberPicker3"
-        android:layout_alignEnd="@+id/numberPicker3" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -155,13 +143,24 @@
         android:layout_alignParentStart="true" />
 
     <Button
+        style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save number"
-        android:id="@+id/saveNumber"
+        android:text="Uložit číslo"
+        android:id="@+id/save"
         android:layout_below="@+id/numberPicker3"
-        android:layout_toRightOf="@+id/cislo"
-        android:layout_toEndOf="@+id/cislo"
-        android:layout_alignParentStart="false" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:onClick="setNumber" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cislo"
+        android:layout_below="@+id/textView4"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/numberPicker3"
+        android:layout_toStartOf="@+id/numberPicker3" />
 
 </RelativeLayout>

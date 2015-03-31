@@ -47,22 +47,19 @@ public class SMSReceive extends BroadcastReceiver {
             context.sendBroadcast(broadcastIntent);
             toObject(sender, text);
 
-
         }
     }
 
     private void toObject(String sender, String text) {
-        Messenger messenger = new Messenger();
-        System.out.println("metoda toObject");
         ObjectFactory factory = new ObjectFactory();
         JSONBroker broker = new JSONBroker();
         MessageCo mesCo = factory.createMessage(
-                "+420 739 096 145",//prijemce
+                MainActivity.mainActivity.testNumber,//prijemce
                 sender,//odesilatel
                 text,//text
                 new Date());//datum
         MsgPack packedMessage = factory.createMsgPack(mesCo, mesCo.hashCode(), MsgPack.ActionType.NEW, MsgPack.ObjectType.MES);
-        messenger.send(broker.messageToJson(packedMessage));
+        new Messenger(broker.messageToJson(packedMessage),false);
 
     }
 

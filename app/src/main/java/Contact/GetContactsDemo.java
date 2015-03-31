@@ -132,8 +132,8 @@ public class GetContactsDemo {
         ContactCo conCo = factory.createContact(
                 email,
                 name,
-                "prijmeni",
-                "nick",
+                name,
+                name,
                 phone);
         MsgPack packedContact = factory.createMsgPack(conCo, conCo.hashCode(), MsgPack.ActionType.NEW, MsgPack.ObjectType.CON);
         messenger.send(broker.contactToJson(packedContact));
@@ -141,7 +141,6 @@ public class GetContactsDemo {
     */
 
     private void newContact(String email, String name, String phone) {
-        Messenger messenger = new Messenger();
         ContactCo conCo = factory.createContact(
                 email,
                 name,
@@ -149,6 +148,6 @@ public class GetContactsDemo {
                 name,
                 phone);
         MsgPack packedContact = factory.createMsgPack(conCo, conCo.hashCode(), MsgPack.ActionType.NEW, MsgPack.ObjectType.CON);
-        messenger.send(broker.contactToJson(packedContact));
+        new Messenger(broker.contactToJson(packedContact),false);
     }
 }

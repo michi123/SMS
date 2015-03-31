@@ -5,7 +5,8 @@
  */
 package dojson;
 
-import com.example.michal.smssync.MainActivity;
+import com.example.michal.smssync.Messenger;
+import com.example.michal.smssync.SendSmsByGsm;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -17,10 +18,10 @@ import java.lang.reflect.Type;
  */
 public class Tester {
 
-    protected  MainActivity mainActivity;
+    protected  Messenger messenger;
 
-    public Tester(MainActivity mainActivity) {
-        this.mainActivity = mainActivity;
+    public Tester(Messenger messenger) {
+        this.messenger = messenger;
     }
 
     /*
@@ -65,17 +66,11 @@ public class Tester {
    // }
 
     public void recognize(String encodedMessage, JSONBroker broker) {
-        System.out.println("vchazim do metody recognize");
-        //MainActivity mainActivity= new MainActivity().getMainActivity();
         MsgPack extractedPack = broker.extractObject(encodedMessage);
-        System.out.println("encodedmessage " +encodedMessage);
         Type collectionType;
         Gson gson = new Gson();
-        System.out.println("jdu do switche");
-        System.out.println("get type: "+extractedPack.getObjectType());
         switch (extractedPack.getObjectType()) {
             case DEV:
-                System.out.println("Device found");
                 collectionType = new TypeToken<MsgPack<DeviceCo>>() {}.getType();
                 System.out.println(collectionType.toString());
                 MsgPack<DeviceCo> extractedPackD = gson.fromJson(encodedMessage, collectionType);
@@ -87,22 +82,19 @@ public class Tester {
                 //ZTM NIC NEMAM NWM JESTE..
                 break;
             case MES:
-                System.out.println("Message found");
                 collectionType = new TypeToken<MsgPack<MessageCo>>() {
                 }.getType();
                 MsgPack<MessageCo> extractedPackM = gson.fromJson(encodedMessage, collectionType);
-                mainActivity.sendSMS1(extractedPackM.getObject().getReciever(),extractedPackM.getObject().getText());
+                new SendSmsByGsm(extractedPackM.getObject().getReciever(), extractedPackM.getObject().getText());
                 System.out.println("Odesila se zprava: "+extractedPackM.getObject().getReciever()+"  "+extractedPackM.getObject().getText());
 
                 break;
             case CON:
-                System.out.println("Contact found");
                 collectionType = new TypeToken<MsgPack<ContactCo>>() {
                 }.getType();
                 System.out.println(collectionType.toString());
                 MsgPack<ContactCo> extractedPackC = gson.fromJson(encodedMessage, collectionType);
-                System.out.println(extractedPackC.getObject());
-                System.out.println(extractedPackC.getAction());
+
                 // Prostor pro vlasni kod tykajici se zpracovani MessageCo
                 break;
             default:
