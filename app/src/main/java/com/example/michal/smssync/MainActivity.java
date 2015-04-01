@@ -94,13 +94,17 @@ public class MainActivity extends Activity {
 
     public void setNumber(View v) { //doresit hashovani
         //this.testNumber=cislo.getText().toString();  //nefunkcni
+        EditText setNumberText = (EditText) findViewById(R.id.cislo);
+        testNumber = setNumberText.getText().toString();
+
+
         System.out.println("Registrace cisla: " + testNumber);
         new Messenger("registerDevice{\"action\":\"NEW\",\"objectType\":\"DEV\",\"object\":{\"phone\":\"" + this.testNumber + "\"},\"hash\":396873410}", true);
     }
 
 
     public void synchronizace() { //zkontrolovat jestli se zmeni doba poslani resync kdyz ho zmenim v gui
-
+/*
         final Timer timer = new Timer();
         TimerTask resync = new TimerTask() {
             public void run() {
@@ -115,7 +119,7 @@ public class MainActivity extends Activity {
             }
         };
         timer.scheduleAtFixedRate(resync, 0, casSynchronizace * 1000);
-
+*/
     }
 
     public void loadSMS(View v) {               //nejspise nepouzijem
