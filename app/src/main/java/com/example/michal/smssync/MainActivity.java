@@ -104,7 +104,7 @@ public class MainActivity extends Activity {
 
 
     public void synchronizace() { //zkontrolovat jestli se zmeni doba poslani resync kdyz ho zmenim v gui
-/*
+
         final Timer timer = new Timer();
         TimerTask resync = new TimerTask() {
             public void run() {
@@ -119,7 +119,7 @@ public class MainActivity extends Activity {
             }
         };
         timer.scheduleAtFixedRate(resync, 0, casSynchronizace * 1000);
-*/
+
     }
 
     public void loadSMS(View v) {               //nejspise nepouzijem
