@@ -42,7 +42,7 @@ public class MainActivity extends Activity {
     NumberPicker np3;
     int timer;
     EditText cislo;
-    int casSynchronizace = 10; //nacist z gui
+    int casSynchronizace = 15; //nacist z gui
     Queue<String> queue = new PriorityQueue<String>();
     public static String testNumber = "+420 773 048 598";
 
@@ -94,6 +94,10 @@ public class MainActivity extends Activity {
 
     public void setNumber(View v) { //doresit hashovani
         //this.testNumber=cislo.getText().toString();  //nefunkcni
+        EditText setNumberText = (EditText) findViewById(R.id.cislo);
+        testNumber = setNumberText.getText().toString();
+
+
         System.out.println("Registrace cisla: " + testNumber);
         new Messenger("registerDevice{\"action\":\"NEW\",\"objectType\":\"DEV\",\"object\":{\"phone\":\"" + this.testNumber + "\"},\"hash\":396873410}", true);
     }
@@ -104,7 +108,7 @@ public class MainActivity extends Activity {
         final Timer timer = new Timer();
         TimerTask resync = new TimerTask() {
             public void run() {
-                new Messenger("resync", false);
+                new Messenger("rsync", false);
                 if (queue.size() != 0) {
                     for (int i = 0; i < queue.size(); i++) {
                         if (Messenger.isConnected() == true) {
