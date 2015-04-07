@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -40,7 +41,10 @@ public class MainActivity extends Activity {
     NumberPicker np1;
     NumberPicker np2;
     NumberPicker np3;
+    EditText pin;
     int timer;
+    boolean zapnutaSynchronizace;
+    CheckBox synchronizovat;
     EditText cislo;
     int casSynchronizace = 15; //nacist z gui
     Queue<String> queue = new PriorityQueue<String>();
@@ -48,9 +52,9 @@ public class MainActivity extends Activity {
 
     private BroadcastReceiver intentReciever = new BroadcastReceiver() {
         @Override
-        public void onReceive(Context context, Intent intent) {
-            TextView intTxt = (TextView) findViewById(R.id.textMsg);
-            intTxt.setText(intent.getExtras().getString("sms"));
+        public void onReceive(Context context, Intent intent) {  //odkomentovat pokud nepujde reciever
+          //  TextView intTxt = (TextView) findViewById(R.id.textMsg);
+      //      intTxt.setText(intent.getExtras().getString("sms"));
         }
     };
 
@@ -73,8 +77,19 @@ public class MainActivity extends Activity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
+
         setMainActivity();
         synchronizace();
+        zapnutaSynchronizace=true;
+    }
+    public void setCheckBoxSynchronizace(View v){//predelat aby zaposoval jestli je checkbox zakliknuty
+        synchronizovat = (CheckBox) findViewById(R.id.synchronizovatCheckBox);
+        System.out.println(zapnutaSynchronizace);
+    }
+
+    public void setPin(String p){//zavolat pri zachyceni pinu
+        pin = (EditText) findViewById(R.id.pin);
+        pin.setText(p);
     }
 
     public void setMainActivity() {
@@ -85,11 +100,18 @@ public class MainActivity extends Activity {
         return mainActivity;
     }
 
-    public void Time(View v) {//dodelat
+    public void setTime(View v) {//dodelat listener
+        System.out.println("ahoj");
         np1 = (NumberPicker) findViewById(R.id.numberPicker1);
         np2 = (NumberPicker) findViewById(R.id.numberPicker2);
         np3 = (NumberPicker) findViewById(R.id.numberPicker3);
-        this.timer = ((np1.getValue() * 60 * 60) + (np2.getValue() * 60) + np3.getValue());
+       /* np1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                timer = ((np1.getValue() * 60 * 60) + (np2.getValue() * 60) + np3.getValue());
+            }
+        });*/
+
         System.out.println(this.timer);
     }
 
@@ -109,11 +131,11 @@ public class MainActivity extends Activity {
         final Timer timer = new Timer();
         TimerTask resync = new TimerTask() {
             public void run() {
-                new Messenger("rsync", false);
+                //new Messenger("rsync", false);
                 if (queue.size() != 0) {
                     for (int i = 0; i < queue.size(); i++) {
                         if (Messenger.isConnected() == true) {
-                            new Messenger(queue.poll().toString(), false);// dalo by se udelat tak ze by overoval jestli dosel prikaz na server a pak ho vymazal z kolekce
+                          //  new Messenger(queue.poll().toString(), false);// dalo by se udelat tak ze by overoval jestli dosel prikaz na server a pak ho vymazal z kolekce
                         }
                     }
                 }

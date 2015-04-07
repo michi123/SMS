@@ -75,11 +75,9 @@ public class Tester {
                 System.out.println(collectionType.toString());
                 MsgPack<DeviceCo> extractedPackD = gson.fromJson(encodedMessage, collectionType);
                 System.out.println(extractedPackD.toString());
-                // Zde se vyuzije vlastni kod pro zpracovani zpravy
                 // napr extractedPackD.getObject() vrati objekt typu DeviceCo a ten lze
-                // vyuzit k dalsimu zpracovani.
 
-                //ZTM NIC NEMAM NWM JESTE..
+
                 break;
             case MES:
                 collectionType = new TypeToken<MsgPack<MessageCo>>() {
